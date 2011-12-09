@@ -10,7 +10,7 @@
 
 usage() {
     echo "Usage: mongo_migrate <action> [name] <target>
-        action = {generate|run|runall}
+        action = {generate|run}
         target = {up|down}" >&2
 	  echo ""
     exit 1
@@ -135,11 +135,22 @@ all_down() {
     done
 }
 
+run_all() {
+    local target=$1
+
+    if [[ $target = "up" ]]; then
+        all_up
+    elif [[ $target = "down" ]]; then
+        all_down
+    else
+        usage
+        exit 1
+    fi
+}
+
 ## SCRIPT RUN
 
 if [ $# -lt 2 ];then usage; fi
-MIGRATION_NAME=$2
-MIGRATION_TARGET=$3
 
 #Convention configs
 MONGO_HOST=localhost
@@ -152,18 +163,13 @@ ensure_migration_dir
 
 case "$1" in
   generate)
-        generate $MIGRATION_NAME
+        generate $2
         ;;
   run)
-        run_migration $MIGRATION_NAME $MIGRATION_TARGET
-        ;;
-  runall)
-        if [[ $2 = "up" ]]; then
-            all_up
-        elif [[ $2 = "down" ]]; then
-            all_down
+        if [[ -n $3 ]]; then
+          run_migration $2 $3
         else
-            usage
+          run_all $2
         fi
         ;;
   *)

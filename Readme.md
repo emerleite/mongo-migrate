@@ -12,7 +12,7 @@ Instalation
     $ cd mongo-migrate
     $ cp config-sample.cfg config.cfg
     
-Edit config.cfg with your database information
+Edit *config.cfg* with your database information
 
 Usage
 -----
@@ -55,8 +55,8 @@ Mongo migrate has 2 modes of running. Up and Down. The first make things happen 
 The name can bem the full name or partial name. Ex: 20111209002426_add_person.js or only add_person. Mongo migrate will first look for a full name and after will fallback to find the file based on the partial name.
 
 ### All migrations
-    $ ./mongo_migrate runall up
-    $ ./mongo_migrate runall down
+    $ ./mongo_migrate run up
+    $ ./mongo_migrate run down
 
 When running all migrations, mongo migrate will run only the new migrations, because it controls witch is the last one.
 
