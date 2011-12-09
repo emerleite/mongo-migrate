@@ -1,2 +1,6 @@
 db/migrate
 config.cfg
+.tmp_*~
+*#
+.#*
+
