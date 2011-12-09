@@ -1,3 +1,7 @@
+0.3.0 / 2011-12-09
+==================
+  * Authentication support via MONGO_USR and MONGO_PWD at config.cfg
+  * Allow user to only use MONGO_USR and require password when running the migration
 0.2.0 / 2011-12-09
 ==================
   * runall now is only run without name
