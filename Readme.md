@@ -52,6 +52,8 @@ Mongo migrate has 2 modes of running. Up and Down. The first make things happen 
     $ ./mongo_migrate run [name] up
     $ ./mongo_migrate run [name] down
 
+The name can bem the full name or partial name. Ex: 20111209002426_add_person.js or only add_person. Mongo migrate will first look for a full name and after will fallback to find the file based on the partial name.
+
 ### All migrations
     $ ./mongo_migrate runall up
     $ ./mongo_migrate runall down
