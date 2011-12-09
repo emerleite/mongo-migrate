@@ -1,10 +1,10 @@
 MongoDB migrate
 ===============
-This project aims to be an agnostic migration system for mongodb. Sometimes when you add attributes, you need to give a value for existing documents. Doing this frequently, this tool can help, since it has an  straitforward syntax and simplicity.
+This project aims to be an agnostic migration system for mongodb. Sometimes when you add attributes, you need to give a value for existing documents. Doing this frequently, this tool can help, since it has an  straightforward syntax and simplicity.
 
 Dependencies
 ------------
-MongoDB client - the bin file that comes with mongodb. I will soon create an installation script to make things easier. Now you need to download from mongodb website. - <http://www.mongodb.org/downloads>
+MongoDB client - the bin file that comes with mongodb. I will soon create an installation script to make things easier. For now you need to download it from mongodb website. - <http://www.mongodb.org/downloads>
 
 Instalation
 -----------
@@ -16,7 +16,7 @@ Edit config.cfg with your database information
 
 Usage
 -----
-Mongo migrate has two options. Generate and run. The syntax is pretty straitforward as explained above:
+Mongo migrate has two options. `generate` and `run`. The syntax is pretty straitforward as explained above:
 
 ### Basic information
 By convention, mongo migrate uses the directory db/migrate when generating and running migrations. You can change it, by editing the MIGRATION_DIR configuration at config.cfg. See config.example.cfg for details.
