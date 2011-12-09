@@ -9,6 +9,10 @@ MongoDB client - the bin file that comes with mongodb. I will soon create an ins
 Instalation
 -----------
     $ git clone git://github.com/emerleite/mongo-migrate.git
+    $ cd mongo-migrate
+    $ cp config-sample.cfg config.cfg
+    
+Edit config.cfg with your database information
 
 Usage
 -----
@@ -23,6 +27,23 @@ Mongo migrate generates migrtion in the following format:
 YYYMMDDhhmmssmm_name.js. Ex: 20111209002426_add_person.js
 
     $ ./mongo_migrate generate [name]
+
+This will generate the following file:
+
+```js
+var migration = {
+  up: function() {
+  
+  },
+  down: function() {
+
+  }
+};
+
+migration[target].call();
+```
+
+Put the code for the changes on up and the code for rollback on down.
 
 ### Running
 Mongo migrate has 2 modes of running. Up and Down. The first make things happen and the second is a rollback. For these 2 modes, we call run one specific migration or all migrations. Mongo migrate controll the current migration, to enable run only the last migrations or just run all.
