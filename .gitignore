@@ -1,4 +1,5 @@
-db/migrate
+db/migrate/*.js
+!db/migrate/.gitkeep
 config.cfg
 current
 .tmp_*~
