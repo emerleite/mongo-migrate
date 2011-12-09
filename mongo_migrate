@@ -90,8 +90,8 @@ run_migration() {
     local file=`get_migration_file_name ${name}`
 
     check_migration $name
-
-    mongo $MONGO_HOST/$MONGO_DATABASE --eval "target='${target}'" $file
+    
+    mongo $MONGO_HOST/$MONGO_DATABASE -u $MONGO_USR -p $MONGO_PWD --eval "target='${target}'" $file
     if [ $? -ne 0 ];
     then
         echo "\nerror executing migration.\n"
