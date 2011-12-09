@@ -24,11 +24,11 @@ By convention, mongo migrate uses the directory db/migrate when generating and r
 ### Configuration
 MongoDB migrate uses a configuration file called config.cfg. It has the following options:
 
-*  MONGO_HOST      - The database host. Default is localhost
-*  MONGO_DATABASE  - Required. Do not have default value
-*  MIGRATION_DIR   - Where to find migrations. Default is ./db/migrate/
-*  MONGO_USR       - Username. Default is empty
-*  MONGO_PWD       - Password. Default is empty
+*  *MONGO_HOST*      - The database host. Default is localhost
+*  *MONGO_DATABASE*  - Required. Do not have default value
+*  *MIGRATION_DIR*   - Where to find migrations. Default is ./db/migrate/
+*  *MONGO_USR*       - Username. Default is empty
+*  *MONGO_PWD*       - Password. Default is empty
 
 Note: When you use MONGO_USR and not MONGO_PWD you'll be prompted for password.
 
