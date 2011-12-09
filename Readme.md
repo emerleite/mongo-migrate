@@ -21,6 +21,17 @@ Mongo migrate has two options. `generate` and `run`. The syntax is pretty strait
 ### Basic information
 By convention, mongo migrate uses the directory db/migrate when generating and running migrations. You can change it, by editing the MIGRATION_DIR configuration at config.cfg. See config.sample.cfg for details.
 
+### Configuration
+MongoDB migrate uses a configuration file called config.cfg. It has the following options:
+
+*  MONGO_HOST      - The database host. Default is localhost
+*  MONGO_DATABASE  - Required. Do not have default value
+*  MIGRATION_DIR   - Where to find migrations. Default is ./db/migrate/
+*  MONGO_USR       - Username. Default is empty
+*  MONGO_PWD       - Password. Default is empty
+
+Note: When you use MONGO_USR and not MONGO_PWD you'll be prompted for password.
+
 ### Generate
 Mongo migrate generates migrtion in the following format: 
 
