@@ -19,7 +19,7 @@ Usage
 Mongo migrate has two options. `generate` and `run`. The syntax is pretty straitforward as explained above:
 
 ### Basic information
-By convention, mongo migrate uses the directory db/migrate when generating and running migrations. You can change it, by editing the MIGRATION_DIR configuration at config.cfg. See config.example.cfg for details.
+By convention, mongo migrate uses the directory db/migrate when generating and running migrations. You can change it, by editing the MIGRATION_DIR configuration at config.cfg. See config.sample.cfg for details.
 
 ### Generate
 Mongo migrate generates migrtion in the following format: 
