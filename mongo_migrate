@@ -1,0 +1,132 @@
+#!/bin/sh
+
+### BEGIN INFO
+# Provides:          Mongodb migration manager
+# Author:            Emerson Macedo - http://github.com/emerleite - http://codificando.com 
+# Description:       Generate migration script 
+### END INFO
+
+### SCRIPT FUNCTIONS
+
+usage() {
+    echo "Usage: mongo_migrate <action> [name] <target>
+        action = {generate|run}
+        target = {up|down}" >&2
+	  echo ""
+    exit 1
+}
+
+ensure_installed() {
+    if [ ! `type -P $1` ]
+    then
+        echo "$1 is not installed. Please install before continue."
+        exit 127
+    fi
+}
+
+ensure_migration_dir() {
+    if [ ! -d $MIGRATION_DIR ]
+    then
+        echo "Migration dir does not exist: $MIGRATION_DIR\n"
+        exit 1
+    fi
+}
+
+ensure_database() {
+    if [ -z $MONGO_DATABASE ]; then
+        echo "MONGO_DATABASE not defined"
+        echo "Define it at config.cfg\n"
+        exit 1
+    fi
+}
+
+generate_migration_file_name() {
+    echo "`date -u +%Y%m%d%H%M%S`_$1.js"
+}
+
+get_migration_file_name() {
+    if [ -e $MIGRATION_DIR$1 ];
+    then
+      echo $MIGRATION_DIR$1
+    else
+      echo "$MIGRATION_DIR$(find ./$MIGRATION_DIR -name '[0-9]*' |grep --color=never _$1.js |awk -F/ '{print $NF}')"
+    fi
+}
+
+check_migration() {
+    local file=`get_migration_file_name $1`
+    local total_files=`get_migration_file_name $1 |wc -l`
+
+    if [ ! $total_files = '1' ]; then 
+        echo "You have 2 files, please use the full file name"
+        echo "Files:"
+        echo "$file\n"
+        exit 1
+    fi
+
+    if [ ! -f $file ]; then
+        echo "Migration not found at $MIGRATION_DIR\n"
+        exit 1
+    fi
+}
+
+generate() {
+    echo "Generating migration ${1}"
+    local file=`generate_migration_file_name ${1}`
+    cp template/migration_template.js $MIGRATION_DIR$file
+    echo "Migration ${MIGRATION_DIR}${file} generated"
+}
+
+run_migration() {
+    local name=$1
+    local target=$2
+
+    echo "running migration ${name} ${target}\n"
+    ensure_installed mongo
+    ensure_database
+
+    if [[ $target != "up" && $target != "down" ]];then usage; fi
+
+    local file=`get_migration_file_name ${name}`
+
+    check_migration $name
+
+    mongo $MONGO_HOST/$MONGO_DATABASE --eval "target='${target}'" $file
+    if [ $? -ne 0 ];
+    then
+        echo "\nerror executing migration.\n"
+        exit 1
+    fi
+    echo "Migration ${name} ${target} executed\n"
+}
+
+## SCRIPT RUN
+
+if [ $# -lt 2 ];then usage; fi
+MIGRATION_NAME=$2
+MIGRATION_TARGET=$3
+
+#Convention configs
+MONGO_HOST=localhost
+MIGRATION_DIR="db/migrate/"
+
+#load custom configs (overides defaults)
+source ./config.cfg
+
+ensure_migration_dir
+
+case "$1" in
+  generate)
+        generate $MIGRATION_NAME
+        ;;
+  run)
+        run_migration $MIGRATION_NAME $MIGRATION_TARGET
+        ;;
+  *)
+        usage
+        exit 1
+        ;;
+esac
+
+exit 0
+
