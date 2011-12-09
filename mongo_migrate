@@ -10,7 +10,7 @@
 
 usage() {
     echo "Usage: mongo_migrate <action> [name] <target>
-        action = {generate|run}
+        action = {generate|run|runall}
         target = {up|down}" >&2
 	  echo ""
     exit 1
@@ -97,7 +97,42 @@ run_migration() {
         echo "\nerror executing migration.\n"
         exit 1
     fi
+
+    [ $target = "up" ] && local inc="+1" || local inc="-1"
+    local migration_name="$(echo $file |awk -F/ '{print $NF}')"
+    local migration_time="$(echo $migration_name |cut -d_ -f1 |bc)"
+
+    echo $migration_time$inc|bc > ./current
+
     echo "Migration ${name} ${target} executed\n"
+}
+
+all_up() {
+    touch current
+    local current_migration=`cat current |bc`
+    local migrations="$(find $MIGRATION_DIR -name \*.js |sort -n)"
+    for migration in $migrations
+    do
+        local migration_name="$(echo $migration |awk -F/ '{print $NF}')"
+        local migration_time="$(echo $migration_name |cut -d_ -f1 |bc)"
+        if [[ $migration_time -gt $current_migration ]]; then
+            run_migration $migration_name up
+        fi
+    done
+}
+
+all_down() {
+    touch current
+    local current_migration=`cat current |bc`
+    local migrations="$(find $MIGRATION_DIR -name \*.js |sort -nr)"
+    for migration in $migrations
+    do
+        local migration_name="$(echo $migration |awk -F/ '{print $NF}')"
+        local migration_time="$(echo $migration_name |cut -d_ -f1 |bc)"
+        if [[ $migration_time -lt $current_migration ]]; then
+            run_migration $migration_name down
+        fi
+    done
 }
 
 ## SCRIPT RUN
@@ -121,6 +156,15 @@ case "$1" in
         ;;
   run)
         run_migration $MIGRATION_NAME $MIGRATION_TARGET
+        ;;
+  runall)
+        if [[ $2 = "up" ]]; then
+            all_up
+        elif [[ $2 = "down" ]]; then
+            all_down
+        else
+            usage
+        fi
         ;;
   *)
         usage
