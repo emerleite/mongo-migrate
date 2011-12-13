@@ -130,8 +130,8 @@ all_up() {
 }
 
 all_down() {
-    touch current
-    local current_migration=`cat current |bc`
+    local current_migration=`get_current_migration|bc`
+
     local migrations="$(find $MIGRATION_DIR -name \*.js |sort -nr)"
     for migration in $migrations
     do
