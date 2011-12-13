@@ -102,14 +102,22 @@ run_migration() {
     local migration_name="$(echo $file |awk -F/ '{print $NF}')"
     local migration_time="$(echo $migration_name |cut -d_ -f1 |bc)"
 
-    echo $migration_time$inc|bc > ./current
+    update_current_migration `echo "$migration_time$inc"|bc`
 
     echo "Migration ${name} ${target} executed\n"
 }
 
+get_current_migration() {
+    echo "`mongo $MONGO_HOST/$MONGO_DATABASE -u $MONGO_USR -p $MONGO_PWD --quiet ./get_current.js`"
+}
+
+update_current_migration() {
+    mongo $MONGO_HOST/$MONGO_DATABASE -u $MONGO_USR -p $MONGO_PWD --quiet --eval "current='${1}'" ./update_current.js
+}
+
 all_up() {
-    touch current
-    local current_migration=`cat current |bc`
+    local current_migration=`get_current_migration|bc`
+
     local migrations="$(find $MIGRATION_DIR -name \*.js |sort -n)"
     for migration in $migrations
     do
