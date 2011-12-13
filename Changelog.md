@@ -1,3 +1,7 @@
+0.4.0 / 2011-12-13
+==================
+  * Current logic now uses migration_info collection and version attribute to manage state
+
 0.3.0 / 2011-12-09
 ==================
   * Authentication support via MONGO_USR and MONGO_PWD at config.cfg
