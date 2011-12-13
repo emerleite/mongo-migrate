@@ -1,3 +1,7 @@
+0.4.1 / 2011-12-13
+==================
+  * Fixed all_down to use the current migration logic
+
 0.4.0 / 2011-12-13
 ==================
   * Current logic now uses migration_info collection and version attribute to manage state
