@@ -9,9 +9,12 @@
 ### SCRIPT FUNCTIONS
 
 usage() {
-    echo "Usage: mongo_migrate <action> [name] <target>
-        action = {generate|run}
-        target = {up|down}" >&2
+    echo "Usage: mongo_migrate [options] [params]
+        -g       generate
+        -r       run
+        -t       target (up or down)
+        -f       migration_file|migration_name
+        -c       configuration file" >&2
 	  echo ""
     exit 1
 }
@@ -158,33 +161,48 @@ run_all() {
 
 ## SCRIPT RUN
 
-if [ $# -lt 2 ];then usage; fi
-
 #Convention configs
 MONGO_HOST=localhost
 MIGRATION_DIR="db/migrate/"
+CONFIG_PATH=./config.cfg
+
+#Parameter extraction
+while getopts "hf:c:t:gr" OPT; do
+  case "$OPT" in
+  "h") usage;; # exibir ajuda
+  "f") FILE_NAME=$OPTARG;;
+  "c") CONFIG_PATH=$OPTARG;;
+  "g") GENERATE=true;;
+  "r") RUN=true;;
+  "t") TARGET=$OPTARG;;
+  "?") exit -1;;
+  esac
+  done
+
+#Check script invocation
+[ -n "$GENERATE" -a -n "$RUN" ] && usage
+[ -n "$GENERATE" -a -z "$FILE_NAME" ] && usage
+
+[ -n "$RUN" -a "$TARGET" != "up" -a "$TARGET" != "down" ] && usage
 
 #load custom configs (overides defaults)
-source ./config.cfg
+source $CONFIG_PATH
 
+#Check migration dir
 ensure_migration_dir
 
-case "$1" in
-  generate)
-        generate $2
-        ;;
-  run)
-        if [[ -n $3 ]]; then
-          run_migration $2 $3
-        else
-          run_all $2
-        fi
-        ;;
-  *)
-        usage
-        exit 1
-        ;;
-esac
+# Script running flow
+if [ $GENERATE ]; then
+    generate $FILE_NAME
+elif [ $RUN ]; then
+    if [ -z "$FILE_NAME" ]; then
+        run_all $TARGET
+    else
+        run_migration $FILE_NAME $TARGET
+    fi
+else
+    usage
+fi
 
 exit 0
 
