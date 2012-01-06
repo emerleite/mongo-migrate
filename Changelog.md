@@ -1,3 +1,9 @@
+0.5.0 / 2011-12-13
+==================
+  * Added option to pass config file path by parameter - Issue #8
+  * Changed the command-line argument interface (using optargs)
+  * Improved documentation
+
 0.4.1 / 2011-12-13
 ==================
   * Fixed all_down to use the current migration logic
