@@ -94,7 +94,7 @@ run_migration() {
 
     check_migration $name
     
-    mongo $MONGO_HOST/$MONGO_DATABASE -u $MONGO_USR -p $MONGO_PWD --eval "target='${target}'" $file
+    mongo $MONGO_HOST/$MONGO_DATABASE $auth --eval "target='${target}'" $file
     if [ $? -ne 0 ];
     then
         echo "\nerror executing migration.\n"
@@ -111,11 +111,11 @@ run_migration() {
 }
 
 get_current_migration() {
-    echo "`mongo $MONGO_HOST/$MONGO_DATABASE -u $MONGO_USR -p $MONGO_PWD --quiet ./get_current.js`"
+    echo "`mongo $MONGO_HOST/$MONGO_DATABASE $auth --quiet ./get_current.js`"
 }
 
 update_current_migration() {
-    mongo $MONGO_HOST/$MONGO_DATABASE -u $MONGO_USR -p $MONGO_PWD --quiet --eval "current='${1}'" ./update_current.js
+    mongo $MONGO_HOST/$MONGO_DATABASE $auth --quiet --eval "current='${1}'" ./update_current.js
 }
 
 all_up() {
@@ -193,6 +193,15 @@ MIGRATION_DIR=${MIGRATION_DIR%/}/
 
 #Check migration dir
 ensure_migration_dir
+#Construct authentication phrase
+auth=""
+if [ $MONGO_USR ]; then
+	auth="$auth -u $MONGO_USR "
+fi
+
+if [ $MONGO_PWD ]; then
+	auth="$auth -p $MONGO_PWD "
+fi
 
 # Script running flow
 if [ $GENERATE ]; then
