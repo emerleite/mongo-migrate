@@ -94,7 +94,12 @@ run_migration() {
 
     check_migration $name
     
-    mongo $MONGO_HOST/$MONGO_DATABASE -u $MONGO_USR -p $MONGO_PWD --eval "target='${target}'" $file
+    if [ -z $MONGO_USR ]; 
+    then
+        mongo $MONGO_HOST/$MONGO_DATABASE --eval "target='${target}'" $file
+    else
+        mongo $MONGO_HOST/$MONGO_DATABASE -u $MONGO_USR -p $MONGO_PWD --eval "target='${target}'" $file
+    fi
     if [ $? -ne 0 ];
     then
         echo "\nerror executing migration.\n"
@@ -111,11 +116,21 @@ run_migration() {
 }
 
 get_current_migration() {
-    echo "`mongo $MONGO_HOST/$MONGO_DATABASE -u $MONGO_USR -p $MONGO_PWD --quiet ./get_current.js`"
+    if [ -z $MONGO_USR ];
+    then
+        echo "`mongo $MONGO_HOST/$MONGO_DATABASE --quiet ./get_current.js`"
+    else
+        echo "`mongo $MONGO_HOST/$MONGO_DATABASE -u $MONGO_USR -p $MONGO_PWD --quiet ./get_current.js`"
+    fi
 }
 
 update_current_migration() {
-    mongo $MONGO_HOST/$MONGO_DATABASE -u $MONGO_USR -p $MONGO_PWD --quiet --eval "current='${1}'" ./update_current.js
+    if [ -z $MONGO_USR ];
+    then
+        mongo $MONGO_HOST/$MONGO_DATABASE --quiet --eval "current='${1}'" ./update_current.js
+    else
+        mongo $MONGO_HOST/$MONGO_DATABASE -u $MONGO_USR -p $MONGO_PWD --quiet --eval "current='${1}'" ./update_current.js
+    fi
 }
 
 all_up() {
