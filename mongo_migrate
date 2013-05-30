@@ -201,7 +201,10 @@ while getopts "hf:c:t:gr" OPT; do
 [ -n "$RUN" -a "$TARGET" != "up" -a "$TARGET" != "down" ] && usage
 
 #load custom configs (overrides defaults)
-source $CONFIG_PATH
+if [ -r $CONFIG_PATH ];
+then
+    source $CONFIG_PATH
+fi
 
 #ensure trailing slash on MIGRATION_DIR
 MIGRATION_DIR=${MIGRATION_DIR%/}/
