@@ -1,6 +1,6 @@
 MongoDB migrate
 ===============
-This project aims to be an agnostic migration system for mongodb. Sometimes when you add attributes, you need to give a value for existing documents. Doing this frequently, this tool can help, since it has an  straightforward syntax and simplicity.
+This project aims to be an agnostic migration system for mongodb. Sometimes when you add attributes, you need to give a value for existing documents. Doing this frequently, this tool can help, since it has a straightforward syntax and simplicity.
 
 Dependencies
 ------------
@@ -30,10 +30,10 @@ Note: When you use MONGO_USR and not MONGO_PWD you'll be prompted for password.
 
 Usage
 -----
-Mongo migrate has two modes. `generate` and `run`. The syntax is pretty straitforward as explained above:
+Mongo migrate has two modes. `generate` and `run`. The syntax is pretty straightforward as explained above:
 
 ### Generate
-Mongo migrate generates migrtion in the following format: 
+Mongo migrate generates migration in the following format: 
 
 YYYMMDDhhmmssmm_name.js. Ex: 20111209002426_add_person.js
 
@@ -57,7 +57,7 @@ migration[target].call();
 Put the code for the changes on up and the code for rollback on down.
 
 ### Running
-Mongo migrate has 2 modes of running. Up and Down. The first make things happen and the second is a rollback. For these 2 modes, we call run one specific migration or all migrations. Mongo migrate controll the current migration, to enable run only the last migrations or just run all.
+Mongo migrate has 2 modes of running. Up and Down. The first make things happen and the second is a rollback. For these 2 modes, we call run one specific migration or all migrations. Mongo migrate controls the current migration, to enable run only the last migrations or just run all.
 
 ### Options
 -g   generate
@@ -70,7 +70,7 @@ Mongo migrate has 2 modes of running. Up and Down. The first make things happen 
     $ ./mongo_migrate -rt up   -f [file_name]
     $ ./mongo_migrate -rt down -f [file_name]
 
-The name can bem the full name or partial name. Ex: 20111209002426_add_person.js or only add_person. Mongo migrate will first look for a full name and after will fallback to find the file based on the partial name.
+The name can be the full name or partial name. Ex: 20111209002426_add_person.js or only add_person. Mongo migrate will first look for a full name and after will fallback to find the file based on the partial name.
 
 ### All migrations
     $ ./mongo_migrate -rt up
@@ -83,7 +83,7 @@ If you want to pass the configuration file path and not use the convention (i.e 
     $ ./mongo_migrate -rt down -c /path/to/config/file
     $ ./mongo_migrate -gf migration_name -c /path/to/config/file
 
-When running all migrations, mongo migrate will run only the new migrations, because it controls witch is the last one.
+When running all migrations, mongo migrate will run only the new migrations, because it controls which is the last one.
 
 To-Do
 -----
