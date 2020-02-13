@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ### BEGIN INFO
 # Provides:          Mongodb migration manager
@@ -162,8 +162,8 @@ run_all() {
 ## SCRIPT RUN
 
 #Convention configs
-MONGO_HOST=localhost
-MIGRATION_DIR="db/migrate/"
+MONGO_HOST="${MONGO_HOST:-localhost}"
+MIGRATION_DIR="${MIGRATION_DIR:-db/migrate/}"
 CONFIG_PATH=./config.cfg
 
 #Parameter extraction
