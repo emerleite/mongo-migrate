@@ -209,7 +209,6 @@ if [ $MONGO_SSL_CA_FILE ]; then
     ssl="$ssl --ssl $MONGO_SSL_CA_FILE"
 fi
 
-
 # Script running flow
 if [ $GENERATE ]; then
     generate $FILE_NAME
