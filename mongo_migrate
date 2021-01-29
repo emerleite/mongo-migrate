@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ### BEGIN INFO
 # Provides:          Mongodb migration manager
@@ -94,7 +94,7 @@ run_migration() {
 
     check_migration $name
     
-    mongo $MONGO_HOST/$MONGO_DATABASE $auth --eval "target='${target}'" $file
+    mongo $MONGO_HOST/$MONGO_DATABASE $auth $ssl --eval "target='${target}'" $file
     if [ $? -ne 0 ];
     then
         echo "\nerror executing migration.\n"
@@ -111,11 +111,11 @@ run_migration() {
 }
 
 get_current_migration() {
-    echo "`mongo $MONGO_HOST/$MONGO_DATABASE $auth --quiet ./get_current.js`"
+    echo "`mongo $MONGO_HOST/$MONGO_DATABASE $auth $ssl --quiet ./get_current.js`"
 }
 
 update_current_migration() {
-    mongo $MONGO_HOST/$MONGO_DATABASE $auth --quiet --eval "current='${1}'" ./update_current.js
+    mongo $MONGO_HOST/$MONGO_DATABASE $auth $ssl --quiet --eval "current='${1}'" ./update_current.js
 }
 
 all_up() {
@@ -162,8 +162,8 @@ run_all() {
 ## SCRIPT RUN
 
 #Convention configs
-MONGO_HOST=localhost
-MIGRATION_DIR="db/migrate/"
+MONGO_HOST="${MONGO_HOST:-localhost}"
+MIGRATION_DIR="${MIGRATION_DIR:-db/migrate/}"
 CONFIG_PATH=./config.cfg
 
 #Parameter extraction
@@ -202,6 +202,13 @@ fi
 if [ $MONGO_PWD ]; then
 	auth="$auth -p $MONGO_PWD "
 fi
+
+#Build ssl cert command
+ssl=""
+if [ $MONGO_SSL_CA_FILE ]; then
+    ssl="$ssl --ssl $MONGO_SSL_CA_FILE"
+fi
+
 
 # Script running flow
 if [ $GENERATE ]; then
